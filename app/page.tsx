@@ -10,7 +10,8 @@ export default function Home() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/video.mov" type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
+          <source src="/video.mov" type="video/quicktime" />
         </video>
         
         <div className="absolute inset-0 bg-gradient-to-br from-rose-200/40 via-pink-200/30 to-rose-300/40" />
