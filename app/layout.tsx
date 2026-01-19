@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Espace Rêve - Créateur d'intérieurs",
-  description: "Nous créons votre espace de rêve",
+  title: "Royalty room - meubles d'exception",
+  description: "Coiffeuses vanity - lits - dressings - chaises, nous créons votre espace de rêve",
 };
 
 function Navigation() {
