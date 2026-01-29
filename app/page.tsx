@@ -164,37 +164,62 @@ export default function Home() {
       </section>
 
       {/* Section Galerie */}
-      <section className="py-32 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Portfolio</span>
-            <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
-              Laissez-vous inspirer
-            </h2>
-            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
-              Découvrez comment nous transformons les espaces en véritables havres de paix et d'élégance
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="aspect-[3/4] bg-gradient-to-br from-rose-100 to-pink-100 rounded-3xl overflow-hidden group relative">
-              <div className="absolute inset-0 flex items-end justify-center pb-8">
-                <span className="text-sm text-gray-700 tracking-[0.2em] uppercase font-light">Salon</span>
-              </div>
-            </div>
-            <div className="aspect-[3/4] bg-gradient-to-br from-pink-100 to-rose-100 rounded-3xl overflow-hidden group relative md:translate-y-12">
-              <div className="absolute inset-0 flex items-end justify-center pb-8">
-                <span className="text-sm text-gray-700 tracking-[0.2em] uppercase font-light">Chambre</span>
-              </div>
-            </div>
-            <div className="aspect-[3/4] bg-gradient-to-br from-rose-100 to-pink-100 rounded-3xl overflow-hidden group relative">
-              <div className="absolute inset-0 flex items-end justify-center pb-8">
-                <span className="text-sm text-gray-700 tracking-[0.2em] uppercase font-light">Cuisine</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+<section className="py-32 px-6 bg-white">
+  <div className="max-w-7xl mx-auto">
+    <div className="text-center mb-20">
+      <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
+        Portfolio
+      </span>
+      <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
+        Laissez-vous inspirer
+      </h2>
+{/*       <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+        Découvrez comment nous transformons les espaces en véritables havres de paix et d'élégance
+      </p> */}
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+ <div className="h-[420px] rounded-3xl overflow-hidden group relative">
+  <img
+    src="/inspo1.jpeg"
+    alt="Inspiration 1"
+    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+  <div className="absolute inset-0 bg-black/10" />
+</div>
+
+<div className="h-[420px] rounded-3xl overflow-hidden group relative">
+  <img
+    src="/inspo2.jpeg"
+    alt="Inspiration 2"
+    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+  <div className="absolute inset-0 bg-black/10" />
+</div>
+
+<div className="h-[420px] rounded-3xl overflow-hidden group relative">
+  <img
+    src="/inspo3.jpeg"
+    alt="Inspiration 3"
+    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+  <div className="absolute inset-0 bg-black/10" />
+</div>
+
+ <div className="h-[420px] rounded-3xl overflow-hidden group relative">
+  <img
+    src="/inspo4.jpeg"
+    alt="Inspiration 4"
+    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+  <div className="absolute inset-0 bg-black/10" />
+</div>
+
+    </div>
+  </div>
+</section>
+
 
       {/* Section CTA Premium */}
       <section className="py-32 px-6 relative overflow-hidden">
