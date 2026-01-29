@@ -175,9 +175,9 @@ export default function Home() {
       <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
         Laissez-vous inspirer
       </h2>
-      <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+{/*       <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
         Découvrez comment nous transformons les espaces en véritables havres de paix et d'élégance
-      </p>
+      </p> */}
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
