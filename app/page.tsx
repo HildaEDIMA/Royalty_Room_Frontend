@@ -169,9 +169,9 @@ export default function Home() {
 <section className="py-32 px-6 bg-white">
   <div className="max-w-7xl mx-auto">
     <div className="text-center mb-20">
-      <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
+{/*       <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
         Portfolio
-      </span>
+      </span> */}
       <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
         Laissez-vous inspirer
       </h2>
