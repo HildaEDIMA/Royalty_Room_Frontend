@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
@@ -167,59 +169,31 @@ export default function Home() {
 <section className="py-32 px-6 bg-white">
   <div className="max-w-7xl mx-auto">
     <div className="text-center mb-20">
-      <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
-        Portfolio
-      </span>
+      <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Portfolio</span>
       <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
         Laissez-vous inspirer
       </h2>
-{/*       <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+      <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
         Découvrez comment nous transformons les espaces en véritables havres de paix et d'élégance
-      </p> */}
+      </p>
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      
- <div className="h-[420px] rounded-3xl overflow-hidden group relative">
-  <img
-    src="/inspo1.jpeg"
-    alt="Inspiration 1"
-    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-  <div className="absolute inset-0 bg-black/10" />
-</div>
-
-<div className="h-[420px] rounded-3xl overflow-hidden group relative">
-  <img
-    src="/inspo2.jpeg"
-    alt="Inspiration 2"
-    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-  <div className="absolute inset-0 bg-black/10" />
-</div>
-
-<div className="h-[420px] rounded-3xl overflow-hidden group relative">
-  <img
-    src="/inspo3.jpeg"
-    alt="Inspiration 3"
-    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-  <div className="absolute inset-0 bg-black/10" />
-</div>
-
- <div className="h-[420px] rounded-3xl overflow-hidden group relative">
-  <img
-    src="/inspo4.jpeg"
-    alt="Inspiration 4"
-    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-  <div className="absolute inset-0 bg-black/10" />
-</div>
-
+      {["inspo1.jpeg", "inspo2.jpeg", "inspo3.jpeg", "inspo4.jpeg"].map((img, i) => (
+        <div key={i} className={`h-[420px] rounded-3xl overflow-hidden relative ${i % 2 === 1 ? "md:translate-y-12" : ""}`}>
+          <Image
+            src={`/${img}`}
+            alt={`Inspiration ${i + 1}`}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            priority={i === 0} // charge rapidement la première image
+          />
+          <div className="absolute inset-0 bg-black/10" />
+        </div>
+      ))}
     </div>
   </div>
 </section>
-
 
       {/* Section CTA Premium */}
       <section className="py-32 px-6 relative overflow-hidden">
