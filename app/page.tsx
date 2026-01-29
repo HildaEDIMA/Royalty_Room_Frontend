@@ -1,6 +1,19 @@
 import Image from "next/image";
+import Link from "next/link";
+import { getCategories, getProducts, formatPrice } from "@/lib/api";
 
-export default function Home() {
+export default async function Home() {
+  const [categories, products] = await Promise.all([
+    getCategories(),
+    getProducts(),
+  ]);
+
+  // Obtenir les 3 produits les plus récents
+  const featuredProducts = products
+    .filter(p => p.availability)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 3);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
       {/* Hero Section avec Vidéo */}
@@ -26,79 +39,109 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Best-Sellers */}
+      {/* Section Catégories */}
       <section className="py-32 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Coups de cœur</span>
+            <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Découvrez</span>
             <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight">
-              Nos Best-Sellers
+              Nos Collections
             </h2>
             <div className="w-20 h-0.5 bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Produit 1 */}
-            <div className="group">
-              <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
-                <div className="absolute inset-0 bg-white/40 group-hover:bg-white/20 transition-all duration-500"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-sm text-gray-500 tracking-[0.2em] uppercase">Canapé Oslo</span>
-                </div>
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-light text-gray-900 mb-2">Canapé Oslo</h3>
-                <p className="text-sm text-gray-600 mb-3">Design scandinave épuré</p>
-                <p className="text-lg text-rose-400 font-light">À partir de 1 890 €</p>
-              </div>
+          {categories.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {categories.map((category) => (
+                <Link 
+                  href={`/categories/${category._id}`} 
+                  key={category._id}
+                  className="group"
+                >
+                  <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
+                    <div className="absolute inset-0 bg-white/40 group-hover:bg-white/20 transition-all duration-500"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-sm text-gray-500 tracking-[0.2em] uppercase">{category.name}</span>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-xl font-light text-gray-900 mb-2">{category.name}</h3>
+                    <p className="text-sm text-rose-400 group-hover:text-rose-500 transition-colors">
+                      Découvrir →
+                    </p>
+                  </div>
+                </Link>
+              ))}
             </div>
-
-            {/* Produit 2 */}
-            <div className="group">
-              <div className="aspect-[3/4] bg-gradient-to-br from-pink-50 to-rose-50 rounded-3xl overflow-hidden mb-6 relative">
-                <div className="absolute inset-0 bg-white/40 group-hover:bg-white/20 transition-all duration-500"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-sm text-gray-500 tracking-[0.2em] uppercase">Table Aurore</span>
-                </div>
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-light text-gray-900 mb-2">Table Aurore</h3>
-                <p className="text-sm text-gray-600 mb-3">Élégance intemporelle</p>
-                <p className="text-lg text-rose-400 font-light">À partir de 1 290 €</p>
-              </div>
+          ) : (
+            <div className="text-center text-gray-500 py-20">
+              <p>Aucune catégorie disponible pour le moment</p>
             </div>
-
-            {/* Produit 3 */}
-            <div className="group">
-              <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
-                <div className="absolute inset-0 bg-white/40 group-hover:bg-white/20 transition-all duration-500"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-sm text-gray-500 tracking-[0.2em] uppercase">Fauteuil Luna</span>
-                </div>
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-light text-gray-900 mb-2">Fauteuil Luna</h3>
-                <p className="text-sm text-gray-600 mb-3">Confort et raffinement</p>
-                <p className="text-lg text-rose-400 font-light">À partir de 790 €</p>
-              </div>
-            </div>
-          </div>
+          )}
 
           <div className="text-center mt-16">
-            <a
-              href="#produits"
+            <Link
+              href="/produits"
               className="inline-flex items-center text-rose-400 hover:text-rose-500 transition-colors group"
             >
-              <span className="tracking-wide">Voir toute la collection</span>
+              <span className="tracking-wide">Voir tous les produits</span>
               <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Section Valeurs avec design amélioré */}
+      {/* Section Produits Vedettes */}
+      {featuredProducts.length > 0 && (
+        <section className="py-32 px-6 bg-gradient-to-br from-rose-50/50 to-pink-50/50">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-20">
+              <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Coups de cœur</span>
+              <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight">
+                Nos Dernières Créations
+              </h2>
+              <div className="w-20 h-0.5 bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 mx-auto"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {featuredProducts.map((product) => (
+                <Link 
+                  href={`/produits/${product._id}`} 
+                  key={product._id}
+                  className="group"
+                >
+                  <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
+                    {product.images && product.images.length > 0 ? (
+                      <Image
+                        src={product.images[0].url}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm text-gray-400">Aucune image</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-xl font-light text-gray-900 mb-2">{product.name}</h3>
+                    {product.description && (
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+                    )}
+                    <p className="text-lg text-rose-400 font-light">{formatPrice(product.price)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Section Valeurs */}
       <section className="py-32 px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-rose-50/80 via-pink-50/40 to-rose-50/80"></div>
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-200 rounded-full blur-3xl opacity-20"></div>
@@ -166,46 +209,39 @@ export default function Home() {
       </section>
 
       {/* Section Galerie */}
-<section className="py-32 px-6 bg-white">
-  <div className="max-w-7xl mx-auto">
-    <div className="text-center mb-20">
-{/*       <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
-        Portfolio
-      </span> */}
-      <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
-        Laissez-vous inspirer
-      </h2>
-{/*       <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
-        Découvrez comment nous transformons les espaces en véritables havres de paix et d'élégance
-      </p> */}
-    </div>
+      <section className="py-32 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
+              Laissez-vous inspirer
+            </h2>
+          </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      {[
-        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo1_locpof.jpg",
-        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo2_rzdvgm.jpg",
-        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo3_ygttw8.jpg",
-        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo4_bkfint.jpg",
-      ].map((src, i) => (
-        <div
-          key={i}
-          className={`h-[420px] rounded-3xl overflow-hidden relative ${
-            i % 2 === 1 ? "md:translate-y-12" : ""
-          }`}
-        >
-          <img
-            src={src}
-            alt={`Inspiration ${i + 1}`}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-black/10" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo1_locpof.jpg",
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo2_rzdvgm.jpg",
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo3_ygttw8.jpg",
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo4_bkfint.jpg",
+            ].map((src, i) => (
+              <div
+                key={i}
+                className={`h-[420px] rounded-3xl overflow-hidden relative ${
+                  i % 2 === 1 ? "md:translate-y-12" : ""
+                }`}
+              >
+                <Image
+                  src={src}
+                  alt={`Inspiration ${i + 1}`}
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/10" />
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* Section CTA Premium */}
       <section className="py-32 px-6 relative overflow-hidden">
@@ -234,7 +270,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer élégant */}
+      {/* Footer */}
       <footer className="py-20 px-6 bg-white border-t border-rose-100">
         <div className="max-w-6xl mx-auto">
           <div className="text-center space-y-4">
@@ -246,7 +282,7 @@ export default function Home() {
             </p>
             <div className="pt-8">
               <p className="text-xs text-gray-400">
-                © 2026 — Tous droits réservés
+                © 2026 – Tous droits réservés
               </p>
             </div>
           </div>
