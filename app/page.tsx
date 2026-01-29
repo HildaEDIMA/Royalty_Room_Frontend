@@ -169,7 +169,9 @@ export default function Home() {
 <section className="py-32 px-6 bg-white">
   <div className="max-w-7xl mx-auto">
     <div className="text-center mb-20">
-      <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Portfolio</span>
+      <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
+        Portfolio
+      </span>
       <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
         Laissez-vous inspirer
       </h2>
@@ -179,14 +181,23 @@ export default function Home() {
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      {["inspo1.jpeg", "inspo2.jpeg", "inspo3.jpeg", "inspo4.jpeg"].map((img, i) => (
-        <div key={i} className={`h-[420px] rounded-3xl overflow-hidden relative ${i % 2 === 1 ? "md:translate-y-12" : ""}`}>
-          <Image
-            src={`/${img}`}
+      {[
+        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo1_locpof.jpg",
+        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo2_rzdvgm.jpg",
+        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo3_ygttw8.jpg",
+        "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo4_bkfint.jpg",
+      ].map((src, i) => (
+        <div
+          key={i}
+          className={`h-[420px] rounded-3xl overflow-hidden relative ${
+            i % 2 === 1 ? "md:translate-y-12" : ""
+          }`}
+        >
+          <img
+            src={src}
             alt={`Inspiration ${i + 1}`}
-            fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-            priority={i === 0} // charge rapidement la première image
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-black/10" />
         </div>
@@ -194,6 +205,7 @@ export default function Home() {
     </div>
   </div>
 </section>
+
 
       {/* Section CTA Premium */}
       <section className="py-32 px-6 relative overflow-hidden">
