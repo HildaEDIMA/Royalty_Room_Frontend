@@ -11,26 +11,7 @@ export default async function ProduitsPage() {
   const availableProducts = products.filter(p => p.availability);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-rose-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-extralight tracking-tight text-gray-900">
-              Espace Rêve
-            </Link>
-            <nav className="flex items-center gap-8">
-              <Link href="/" className="text-sm tracking-wide text-gray-600 hover:text-rose-400 transition-colors">
-                Accueil
-              </Link>
-              <Link href="/produits" className="text-sm tracking-wide text-rose-400">
-                Produits
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 pt-24">
       {/* Hero Section */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
@@ -73,7 +54,7 @@ export default async function ProduitsPage() {
       <section className="py-12 px-6 pb-32">
         <div className="max-w-7xl mx-auto">
           {availableProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {availableProducts.map((product) => {
                 const categoryName = typeof product.category === 'object' 
                   ? (product.category as Category).name 
@@ -85,7 +66,7 @@ export default async function ProduitsPage() {
                     key={product._id}
                     className="group"
                   >
-                    <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative">
+                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative">
                       {product.images && product.images.length > 0 ? (
                         <>
                           <Image
@@ -103,40 +84,40 @@ export default async function ProduitsPage() {
                       )}
                       
                       {categoryName && (
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
+                        <div className="absolute top-3 left-3">
+                          <span className="px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
                             {categoryName}
                           </span>
                         </div>
                       )}
                     </div>
                     
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-light text-gray-900 group-hover:text-rose-400 transition-colors">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-light text-gray-900 group-hover:text-rose-400 transition-colors line-clamp-1">
                         {product.name}
                       </h3>
                       {product.description && (
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-xs text-gray-600 line-clamp-2">
                           {product.description}
                         </p>
                       )}
-                      <p className="text-lg text-rose-400 font-light">
+                      <p className="text-base text-rose-400 font-light">
                         {formatPrice(product.price)}
                       </p>
                       
                       {product.availableColors && product.availableColors.length > 0 && (
-                        <div className="flex gap-2 pt-2">
-                          {product.availableColors.slice(0, 5).map((color, idx) => (
+                        <div className="flex gap-1.5 pt-1">
+                          {product.availableColors.slice(0, 4).map((color, idx) => (
                             <div
                               key={idx}
-                              className="w-6 h-6 rounded-full border-2 border-gray-200"
+                              className="w-5 h-5 rounded-full border-2 border-gray-200"
                               style={{ backgroundColor: color.hex }}
                               title={color.name}
                             />
                           ))}
-                          {product.availableColors.length > 5 && (
-                            <div className="w-6 h-6 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
-                              <span className="text-xs text-gray-600">+{product.availableColors.length - 5}</span>
+                          {product.availableColors.length > 4 && (
+                            <div className="w-5 h-5 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
+                              <span className="text-[10px] text-gray-600">+{product.availableColors.length - 4}</span>
                             </div>
                           )}
                         </div>

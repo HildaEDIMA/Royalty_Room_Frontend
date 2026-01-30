@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
+import { getCategories } from "@/lib/api";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,9 @@ export const metadata: Metadata = {
   },
 };
 
-function Navigation() {
+async function Navigation() {
+  const categories = await getCategories();
+  
   return (
     <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-lg z-50 border-b border-rose-100">
       <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
@@ -57,21 +60,26 @@ function Navigation() {
             </button>
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-rose-100">
               <div className="py-3">
-                <Link href="#mobilier" className="block px-6 py-3 text-sm text-gray-600 hover:text-rose-400 hover:bg-rose-50/50 transition-all">
-                  Mobilier de salon
+                <Link 
+                  href="/produits" 
+                  className="block px-6 py-3 text-sm font-medium text-gray-700 hover:text-rose-400 hover:bg-rose-50/50 transition-all"
+                >
+                  Tous les produits
                 </Link>
-                <Link href="#chambres" className="block px-6 py-3 text-sm text-gray-600 hover:text-rose-400 hover:bg-rose-50/50 transition-all">
-                  Chambres à coucher
-                </Link>
-                <Link href="#cuisine" className="block px-6 py-3 text-sm text-gray-600 hover:text-rose-400 hover:bg-rose-50/50 transition-all">
-                  Cuisine & Salle à manger
-                </Link>
-                <Link href="#decoration" className="block px-6 py-3 text-sm text-gray-600 hover:text-rose-400 hover:bg-rose-50/50 transition-all">
-                  Décoration
-                </Link>
-                <Link href="#luminaires" className="block px-6 py-3 text-sm text-gray-600 hover:text-rose-400 hover:bg-rose-50/50 transition-all">
-                  Luminaires
-                </Link>
+                <div className="h-px bg-rose-100 my-2"></div>
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <Link 
+                      key={category._id}
+                      href={`/categories/${category._id}`} 
+                      className="block px-6 py-3 text-sm text-gray-600 hover:text-rose-400 hover:bg-rose-50/50 transition-all"
+                    >
+                      {category.name}
+                    </Link>
+                  ))
+                ) : (
+                  <p className="px-6 py-3 text-sm text-gray-400">Chargement...</p>
+                )}
               </div>
             </div>
           </div>
@@ -88,7 +96,7 @@ function Navigation() {
   );
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

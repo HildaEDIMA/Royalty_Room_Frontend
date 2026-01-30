@@ -2,6 +2,66 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCategories, getProducts, formatPrice } from "@/lib/api";
 
+// Mapping des icônes SVG pour chaque catégorie
+const getCategoryIcon = (categoryName: string) => {
+  const name = categoryName.toLowerCase();
+  
+  if (name.includes('canapé') || name.includes('canape') || name.includes('salon')) {
+    return (
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+    );
+  }
+  
+  if (name.includes('table') || name.includes('bureau')) {
+    return (
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  
+  if (name.includes('fauteuil') || name.includes('chaise')) {
+    return (
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+      </svg>
+    );
+  }
+  
+  if (name.includes('lit') || name.includes('chambre')) {
+    return (
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+      </svg>
+    );
+  }
+  
+  if (name.includes('luminaire') || name.includes('lampe') || name.includes('éclairage')) {
+    return (
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+    );
+  }
+  
+  if (name.includes('décor') || name.includes('decor')) {
+    return (
+      <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    );
+  }
+  
+  // Icône par défaut
+  return (
+    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+    </svg>
+  );
+};
+
 export default async function Home() {
   const [categories, products] = await Promise.all([
     getCategories(),
@@ -39,7 +99,62 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Section Catégories */}
+      {/* Section Produits Vedettes - DÉPLACÉE ICI */}
+      {featuredProducts.length > 0 && (
+        <section className="py-32 px-6 bg-gradient-to-br from-rose-50/50 to-pink-50/50">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-20">
+              <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Coups de cœur</span>
+              <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight">
+                Nos dernières créations
+              </h2>
+              <div className="w-20 h-0.5 bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 mx-auto"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+              {featuredProducts.map((product) => (
+                <Link 
+                  href={`/produits/${product._id}`} 
+                  key={product._id}
+                  className="group"
+                >
+                  <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
+                    {product.images && product.images.length > 0 ? (
+                      <>
+                        <Image
+                          src={product.images[0].url}
+                          alt={product.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm text-gray-400">Aucune image</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="text-center space-y-2">
+                    <h3 className="text-xl font-light text-gray-900 group-hover:text-rose-400 transition-colors">
+                      {product.name}
+                    </h3>
+                    {product.description && (
+                      <p className="text-sm text-gray-600 line-clamp-2">
+                        {product.description}
+                      </p>
+                    )}
+                    <p className="text-lg text-rose-400 font-light">{formatPrice(product.price)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Section Catégories avec icônes - DÉPLACÉE ICI */}
       <section className="py-32 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
@@ -51,24 +166,22 @@ export default async function Home() {
           </div>
 
           {categories.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {categories.map((category) => (
                 <Link 
                   href={`/categories/${category._id}`} 
                   key={category._id}
                   className="group"
                 >
-                  <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
-                    <div className="absolute inset-0 bg-white/40 group-hover:bg-white/20 transition-all duration-500"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-sm text-gray-500 tracking-[0.2em] uppercase">{category.name}</span>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
+                      <div className="text-rose-400 group-hover:text-rose-500 transition-colors">
+                        {getCategoryIcon(category.name)}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-light text-gray-900 mb-2">{category.name}</h3>
-                    <p className="text-sm text-rose-400 group-hover:text-rose-500 transition-colors">
-                      Découvrir →
-                    </p>
+                    <h3 className="text-base font-light text-gray-900 group-hover:text-rose-400 transition-colors">
+                      {category.name}
+                    </h3>
                   </div>
                 </Link>
               ))}
@@ -93,56 +206,43 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Section Produits Vedettes */}
-      {featuredProducts.length > 0 && (
-        <section className="py-32 px-6 bg-gradient-to-br from-rose-50/50 to-pink-50/50">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-              <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">Coups de cœur</span>
-              <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight">
-                Nos Dernières Créations
-              </h2>
-              <div className="w-20 h-0.5 bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 mx-auto"></div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {featuredProducts.map((product) => (
-                <Link 
-                  href={`/produits/${product._id}`} 
-                  key={product._id}
-                  className="group"
-                >
-                  <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
-                    {product.images && product.images.length > 0 ? (
-                      <Image
-                        src={product.images[0].url}
-                        alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm text-gray-400">Aucune image</span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-light text-gray-900 mb-2">{product.name}</h3>
-                    {product.description && (
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
-                    )}
-                    <p className="text-lg text-rose-400 font-light">{formatPrice(product.price)}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+      {/* Section Galerie - DÉPLACÉE ICI */}
+      <section className="py-32 px-6 bg-gradient-to-br from-rose-50/50 to-pink-50/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
+              Laissez-vous inspirer
+            </h2>
           </div>
-        </section>
-      )}
 
-      {/* Section Valeurs */}
-      <section className="py-32 px-6 relative overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo1_locpof.jpg",
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo2_rzdvgm.jpg",
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo3_ygttw8.jpg",
+              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo4_bkfint.jpg",
+            ].map((src, i) => (
+              <div
+                key={i}
+                className={`h-[420px] rounded-3xl overflow-hidden relative ${
+                  i % 2 === 1 ? "md:translate-y-12" : ""
+                }`}
+              >
+                <Image
+                  src={src}
+                  alt={`Inspiration ${i + 1}`}
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/10" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section Valeurs - DÉPLACÉE ICI */}
+      <section className="py-32 px-6 relative overflow-hidden bg-white">
         <div className="absolute inset-0 bg-gradient-to-br from-rose-50/80 via-pink-50/40 to-rose-50/80"></div>
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-200 rounded-full blur-3xl opacity-20"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-200 rounded-full blur-3xl opacity-20"></div>
@@ -204,41 +304,6 @@ export default async function Home() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section Galerie */}
-      <section className="py-32 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-6xl font-extralight text-gray-900 mb-6 tracking-tight leading-tight">
-              Laissez-vous inspirer
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo1_locpof.jpg",
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo2_rzdvgm.jpg",
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo3_ygttw8.jpg",
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo4_bkfint.jpg",
-            ].map((src, i) => (
-              <div
-                key={i}
-                className={`h-[420px] rounded-3xl overflow-hidden relative ${
-                  i % 2 === 1 ? "md:translate-y-12" : ""
-                }`}
-              >
-                <Image
-                  src={src}
-                  alt={`Inspiration ${i + 1}`}
-                  fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black/10" />
-              </div>
-            ))}
           </div>
         </div>
       </section>
