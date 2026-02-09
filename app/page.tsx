@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getCategories, getProducts, formatPrice } from "@/lib/api";
+import AddToCartButton from "./add-to-cart-button";
 
 // Mapping des icônes SVG pour chaque catégorie
 const getCategoryIcon = (categoryName: string) => {
@@ -113,41 +114,56 @@ export default async function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {featuredProducts.map((product) => (
-                <Link 
-                  href={`/produits/${product._id}`} 
-                  key={product._id}
-                  className="group"
-                >
-                  <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
-                    {product.images && product.images.length > 0 ? (
-                      <>
-                        <Image
-                          src={product.images[0].url}
-                          alt={product.name}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm text-gray-400">Aucune image</span>
-                      </div>
-                    )}
-                  </div>
+                <div key={product._id} className="group">
+                  {/* Image cliquable vers le détail */}
+                  <Link href={`/produits/${product._id}`}>
+                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative cursor-pointer">
+                      {product.images && product.images.length > 0 ? (
+                        <>
+                          <Image
+                            src={product.images[0].url}
+                            alt={product.name}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm text-gray-400">Aucune image</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
                   
-                  <div className="text-center space-y-2">
-                    <h3 className="text-xl font-light text-gray-900 group-hover:text-rose-400 transition-colors">
-                      {product.name}
-                    </h3>
-                    {product.description && (
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {product.description}
-                      </p>
-                    )}
-                    <p className="text-lg text-rose-400 font-light">{formatPrice(product.price)}</p>
+                  {/* Informations et bouton */}
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <Link href={`/produits/${product._id}`}>
+                        <h3 className="text-xl font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
+                          {product.name}
+                        </h3>
+                      </Link>
+                      {product.description && (
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                          {product.description}
+                        </p>
+                      )}
+                      <p className="text-lg text-rose-400 font-light">{formatPrice(product.price)}</p>
+                    </div>
+                    
+                    {/* Bouton Ajouter au panier */}
+                    <AddToCartButton
+                      product={{
+                        _id: product._id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.images?.[0]?.url,
+                        availableColors: product.availableColors,
+                      }}
+                    />
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>

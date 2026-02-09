@@ -55,50 +55,51 @@ export default async function ProduitsPage() {
       <section className="py-12 px-6 pb-32">
         <div className="max-w-7xl mx-auto">
           {availableProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {availableProducts.map((product) => {
                 const categoryName = typeof product.category === 'object' 
                   ? (product.category as Category).name 
                   : '';
 
                 return (
-                  <div
-                    key={product._id}
-                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-                  >
-                    {/* Image du produit */}
-                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 relative overflow-hidden">
-                      {product.images && product.images.length > 0 ? (
-                        <>
-                          <Image
-                            src={product.images[0].url}
-                            alt={product.name}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                        </>
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-sm text-gray-400">Aucune image</span>
-                        </div>
-                      )}
-                      
-                      {categoryName && (
-                        <div className="absolute top-3 left-3">
-                          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
-                            {categoryName}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                  <div key={product._id} className="group">
+                    {/* Image cliquable vers la page détail */}
+                    <Link href={`/produits/${product._id}`}>
+                      <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative cursor-pointer">
+                        {product.images && product.images.length > 0 ? (
+                          <>
+                            <Image
+                              src={product.images[0].url}
+                              alt={product.name}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                          </>
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-sm text-gray-400">Aucune image</span>
+                          </div>
+                        )}
+                        
+                        {categoryName && (
+                          <div className="absolute top-3 left-3">
+                            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
+                              {categoryName}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </Link>
                     
-                    {/* Informations du produit */}
-                    <div className="p-6 space-y-4">
+                    {/* Informations et bouton */}
+                    <div className="space-y-4">
                       <div>
-                        <h3 className="text-xl font-light text-gray-900 mb-2">
-                          {product.name}
-                        </h3>
+                        <Link href={`/produits/${product._id}`}>
+                          <h3 className="text-xl font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
+                            {product.name}
+                          </h3>
+                        </Link>
                         {product.description && (
                           <p className="text-sm text-gray-600 line-clamp-2 mb-3">
                             {product.description}
@@ -164,7 +165,7 @@ export default async function ProduitsPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center space-y-4">
             <p className="text-sm tracking-[0.2em] uppercase text-gray-400">
-              Espace Rêve
+              Royalty Room Shop
             </p>
             <p className="text-xs text-gray-500">
               Créateur d'intérieurs d'exception
