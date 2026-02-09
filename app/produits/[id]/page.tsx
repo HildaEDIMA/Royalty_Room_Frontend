@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProduct, getProducts, formatPrice, Category } from "@/lib/api";
 import { notFound } from "next/navigation";
+import AddToCartButton from "@/app/add-to-cart-button";
 
 export default async function ProductPage({ 
   params 
@@ -124,46 +125,20 @@ export default async function ProductPage({
                 </div>
               )}
 
-              {product.availableColors && product.availableColors.length > 0 && (
-                <div>
-                  <h3 className="text-sm tracking-wide uppercase text-gray-600 mb-4">
-                    Couleurs disponibles
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {product.availableColors.map((color, idx) => (
-                      <div key={idx} className="group relative">
-                        <div
-                          className="w-12 h-12 rounded-full border-2 border-gray-200 hover:border-rose-400 transition-all cursor-pointer hover:scale-110"
-                          style={{ backgroundColor: color.hex }}
-                        />
-                        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                          {color.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+              {/* Bouton Ajouter au panier */}
+              {product.availability && (
+                <div className="pt-4">
+                  <AddToCartButton
+                    product={{
+                      _id: product._id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.images?.[0]?.url,
+                      availableColors: product.availableColors,
+                    }}
+                  />
                 </div>
               )}
-
-              <div className="pt-6">
-                <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl p-8">
-                  <h3 className="text-xl font-light text-gray-900 mb-3">
-                    Intéressé par ce produit ?
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    Contactez-nous pour obtenir plus d'informations ou pour passer commande.
-                  </p>
-                  <a
-                    href="#contact"
-                    className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-rose-400 to-pink-400 text-white rounded-full hover:from-rose-500 hover:to-pink-500 transition-all hover:shadow-lg group"
-                  >
-                    <span className="tracking-wide">Nous contacter</span>
-                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
 
               <div className="pt-6 space-y-4">
                 <div className="flex items-start gap-3">
@@ -255,7 +230,7 @@ export default async function ProductPage({
         <div className="max-w-6xl mx-auto">
           <div className="text-center space-y-4">
             <p className="text-sm tracking-[0.2em] uppercase text-gray-400">
-              Espace Rêve
+              Royalty Room Shop
             </p>
             <p className="text-xs text-gray-500">
               Créateur d'intérieurs d'exception
