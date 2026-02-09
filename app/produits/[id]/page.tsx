@@ -3,8 +3,14 @@ import Link from "next/link";
 import { getProduct, getProducts, formatPrice, Category } from "@/lib/api";
 import { notFound } from "next/navigation";
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id);
+export default async function ProductPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  // Attendre les params (Next.js 15)
+  const { id } = await params;
+  const product = await getProduct(id);
 
   if (!product) {
     notFound();
@@ -27,27 +33,9 @@ export default async function ProductPage({ params }: { params: { id: string } }
     ? (product.category as Category).name 
     : '';
 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-rose-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-extralight tracking-tight text-gray-900">
-              Espace Rêve
-            </Link>
-            <nav className="flex items-center gap-8">
-              <Link href="/" className="text-sm tracking-wide text-gray-600 hover:text-rose-400 transition-colors">
-                Accueil
-              </Link>
-              <Link href="/produits" className="text-sm tracking-wide text-gray-600 hover:text-rose-400 transition-colors">
-                Produits
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       {/* Breadcrumb */}
       <section className="py-8 px-6">
         <div className="max-w-7xl mx-auto">

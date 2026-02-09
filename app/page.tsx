@@ -169,7 +169,7 @@ export default async function Home() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {categories.map((category) => (
                 <Link 
-                  href={`/categories/${category._id}`} 
+                  href="/categories/${category._id}"
                   key={category._id}
                   className="group"
                 >
@@ -340,7 +340,7 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center space-y-4">
             <p className="text-sm tracking-[0.2em] uppercase text-gray-400">
-              Espace Rêve
+              Royalty Room Shop
             </p>
             <p className="text-xs text-gray-500">
               Créateur d'intérieurs d'exception

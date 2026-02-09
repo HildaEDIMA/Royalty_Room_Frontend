@@ -4,6 +4,9 @@ import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
 import { getCategories } from "@/lib/api";
+import { CartProvider } from "./cart-context";
+import CartSidebar from "./cart-sidebar";
+import CartButton from "./cart-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -84,6 +87,9 @@ async function Navigation() {
             </div>
           </div>
           
+          {/* Bouton panier */}
+          <CartButton />
+          
           <Link 
             href="#contact" 
             className="text-sm tracking-wider uppercase px-8 py-3 text-white bg-rose-300 hover:bg-rose-400 transition-all duration-300 rounded-full shadow-sm hover:shadow-md"
@@ -106,8 +112,11 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navigation />
-        {children}
+        <CartProvider>
+          <Navigation />
+          <CartSidebar />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
