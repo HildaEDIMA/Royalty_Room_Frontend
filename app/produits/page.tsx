@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getProducts, getCategories, formatPrice, Category } from "@/lib/api";
+import AddToCartButton from "../add-to-cart-button";
 
 export default async function ProduitsPage() {
   const [products, categories] = await Promise.all([
@@ -54,19 +55,19 @@ export default async function ProduitsPage() {
       <section className="py-12 px-6 pb-32">
         <div className="max-w-7xl mx-auto">
           {availableProducts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {availableProducts.map((product) => {
                 const categoryName = typeof product.category === 'object' 
                   ? (product.category as Category).name 
                   : '';
 
                 return (
-                  <Link
-                    href={`/produits/${product._id}`}
+                  <div
                     key={product._id}
-                    className="group"
+                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
                   >
-                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative">
+                    {/* Image du produit */}
+                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 relative overflow-hidden">
                       {product.images && product.images.length > 0 ? (
                         <>
                           <Image
@@ -85,45 +86,60 @@ export default async function ProduitsPage() {
                       
                       {categoryName && (
                         <div className="absolute top-3 left-3">
-                          <span className="px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
+                          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
                             {categoryName}
                           </span>
                         </div>
                       )}
                     </div>
                     
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-light text-gray-900 group-hover:text-rose-400 transition-colors line-clamp-1">
-                        {product.name}
-                      </h3>
-                      {product.description && (
-                        <p className="text-xs text-gray-600 line-clamp-2">
-                          {product.description}
+                    {/* Informations du produit */}
+                    <div className="p-6 space-y-4">
+                      <div>
+                        <h3 className="text-xl font-light text-gray-900 mb-2">
+                          {product.name}
+                        </h3>
+                        {product.description && (
+                          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                            {product.description}
+                          </p>
+                        )}
+                        <p className="text-2xl text-rose-400 font-light">
+                          {formatPrice(product.price)}
                         </p>
-                      )}
-                      <p className="text-base text-rose-400 font-light">
-                        {formatPrice(product.price)}
-                      </p>
+                      </div>
                       
+                      {/* Couleurs disponibles */}
                       {product.availableColors && product.availableColors.length > 0 && (
-                        <div className="flex gap-1.5 pt-1">
-                          {product.availableColors.slice(0, 4).map((color, idx) => (
+                        <div className="flex gap-2 pt-2">
+                          {product.availableColors.slice(0, 5).map((color, idx) => (
                             <div
                               key={idx}
-                              className="w-5 h-5 rounded-full border-2 border-gray-200"
+                              className="w-6 h-6 rounded-full border-2 border-gray-200"
                               style={{ backgroundColor: color.hex }}
                               title={color.name}
                             />
                           ))}
-                          {product.availableColors.length > 4 && (
-                            <div className="w-5 h-5 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
-                              <span className="text-[10px] text-gray-600">+{product.availableColors.length - 4}</span>
+                          {product.availableColors.length > 5 && (
+                            <div className="w-6 h-6 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
+                              <span className="text-xs text-gray-600">+{product.availableColors.length - 5}</span>
                             </div>
                           )}
                         </div>
                       )}
+
+                      {/* Bouton ajouter au panier */}
+                      <AddToCartButton
+                        product={{
+                          _id: product._id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.images?.[0]?.url,
+                          availableColors: product.availableColors,
+                        }}
+                      />
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
