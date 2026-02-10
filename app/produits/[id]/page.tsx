@@ -187,38 +187,53 @@ export default async function ProductPage({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {similarProducts.map((similarProduct) => (
-                <Link
-                  href={`/produits/${similarProduct._id}`}
-                  key={similarProduct._id}
-                  className="group"
-                >
-                  <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative">
-                    {similarProduct.images && similarProduct.images.length > 0 ? (
-                      <>
-                        <Image
-                          src={similarProduct.images[0].url}
-                          alt={similarProduct.name}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                      </>
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sm text-gray-400">Aucune image</span>
-                      </div>
-                    )}
-                  </div>
+                <div key={similarProduct._id} className="group">
+                  {/* Image cliquable */}
+                  <Link href={`/produits/${similarProduct._id}`}>
+                    <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative cursor-pointer">
+                      {similarProduct.images && similarProduct.images.length > 0 ? (
+                        <>
+                          <Image
+                            src={similarProduct.images[0].url}
+                            alt={similarProduct.name}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm text-gray-400">Aucune image</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
                   
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-light text-gray-900 group-hover:text-rose-400 transition-colors">
-                      {similarProduct.name}
-                    </h3>
-                    <p className="text-lg text-rose-400 font-light">
-                      {formatPrice(similarProduct.price)}
-                    </p>
+                  {/* Informations et bouton */}
+                  <div className="space-y-3">
+                    <div>
+                      <Link href={`/produits/${similarProduct._id}`}>
+                        <h3 className="text-lg font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
+                          {similarProduct.name}
+                        </h3>
+                      </Link>
+                      <p className="text-lg text-rose-400 font-light">
+                        {formatPrice(similarProduct.price)}
+                      </p>
+                    </div>
+                    
+                    {/* Bouton Ajouter au panier */}
+                    <AddToCartButton
+                      product={{
+                        _id: similarProduct._id,
+                        name: similarProduct.name,
+                        price: similarProduct.price,
+                        image: similarProduct.images?.[0]?.url,
+                        availableColors: similarProduct.availableColors,
+                      }}
+                    />
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>

@@ -12,28 +12,28 @@ export default async function ProduitsPage() {
   const availableProducts = products.filter(p => p.availability);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 pt-20 sm:pt-24">
       {/* Hero Section */}
-      <section className="py-20 px-6">
+      <section className="py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-4 block">
+          <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-3 sm:mb-4 block">
             Collection complète
           </span>
-          <h1 className="text-6xl md:text-7xl font-extralight text-gray-900 mb-6 tracking-tight">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extralight text-gray-900 mb-4 sm:mb-6 tracking-tight px-4">
             Tous nos produits
           </h1>
-          <div className="w-20 h-0.5 bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 mx-auto"></div>
+          <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-rose-300 via-pink-300 to-rose-300 mx-auto"></div>
         </div>
       </section>
 
       {/* Filtres par catégories */}
       {categories.length > 0 && (
-        <section className="px-6 pb-12">
+        <section className="px-4 sm:px-6 pb-8 sm:pb-12">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
               <Link
                 href="/produits"
-                className="px-6 py-3 rounded-full bg-rose-400 text-white text-sm tracking-wide transition-all hover:bg-rose-500"
+                className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-rose-400 text-white text-xs sm:text-sm tracking-wide transition-all hover:bg-rose-500"
               >
                 Tous
               </Link>
@@ -41,7 +41,7 @@ export default async function ProduitsPage() {
                 <Link
                   key={category._id}
                   href={`/categories/${category._id}`}
-                  className="px-6 py-3 rounded-full bg-white border border-rose-200 text-gray-700 text-sm tracking-wide transition-all hover:bg-rose-50 hover:border-rose-300"
+                  className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white border border-rose-200 text-gray-700 text-xs sm:text-sm tracking-wide transition-all hover:bg-rose-50 hover:border-rose-300"
                 >
                   {category.name}
                 </Link>
@@ -52,10 +52,10 @@ export default async function ProduitsPage() {
       )}
 
       {/* Grille de produits */}
-      <section className="py-12 px-6 pb-32">
+      <section className="py-8 sm:py-12 px-4 sm:px-6 pb-24 sm:pb-32">
         <div className="max-w-7xl mx-auto">
           {availableProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
               {availableProducts.map((product) => {
                 const categoryName = typeof product.category === 'object' 
                   ? (product.category as Category).name 
@@ -65,7 +65,7 @@ export default async function ProduitsPage() {
                   <div key={product._id} className="group">
                     {/* Image cliquable vers la page détail */}
                     <Link href={`/produits/${product._id}`}>
-                      <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative cursor-pointer">
+                      <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-6 relative cursor-pointer">
                         {product.images && product.images.length > 0 ? (
                           <>
                             <Image
@@ -83,8 +83,8 @@ export default async function ProduitsPage() {
                         )}
                         
                         {categoryName && (
-                          <div className="absolute top-3 left-3">
-                            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
+                          <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+                            <span className="px-2 sm:px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
                               {categoryName}
                             </span>
                           </div>
@@ -93,37 +93,37 @@ export default async function ProduitsPage() {
                     </Link>
                     
                     {/* Informations et bouton */}
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
                         <Link href={`/produits/${product._id}`}>
-                          <h3 className="text-xl font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
+                          <h3 className="text-lg sm:text-xl font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
                             {product.name}
                           </h3>
                         </Link>
                         {product.description && (
-                          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                          <p className="text-sm text-gray-600 line-clamp-2 mb-2 sm:mb-3">
                             {product.description}
                           </p>
                         )}
-                        <p className="text-2xl text-rose-400 font-light">
+                        <p className="text-xl sm:text-2xl text-rose-400 font-light">
                           {formatPrice(product.price)}
                         </p>
                       </div>
                       
                       {/* Couleurs disponibles */}
                       {product.availableColors && product.availableColors.length > 0 && (
-                        <div className="flex gap-2 pt-2">
+                        <div className="flex gap-2 pt-1 sm:pt-2">
                           {product.availableColors.slice(0, 5).map((color, idx) => (
                             <div
                               key={idx}
-                              className="w-6 h-6 rounded-full border-2 border-gray-200"
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-gray-200"
                               style={{ backgroundColor: color.hex }}
                               title={color.name}
                             />
                           ))}
                           {product.availableColors.length > 5 && (
-                            <div className="w-6 h-6 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
-                              <span className="text-xs text-gray-600">+{product.availableColors.length - 5}</span>
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
+                              <span className="text-[10px] sm:text-xs text-gray-600">+{product.availableColors.length - 5}</span>
                             </div>
                           )}
                         </div>
