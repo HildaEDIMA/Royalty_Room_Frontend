@@ -117,8 +117,8 @@ export default async function Home() {
               {featuredProducts.map((product) => (
                 <div key={product._id} className="group">
                   {/* Image cliquable vers le détail */}
-                  <Link href={`/produits/${product._id}`}>
-                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative cursor-pointer">
+                  <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl overflow-hidden mb-6 relative">
+                    <Link href={`/produits/${product._id}`} className="absolute inset-0 cursor-pointer">
                       {product.images && product.images.length > 0 ? (
                         <>
                           <Image
@@ -128,30 +128,32 @@ export default async function Home() {
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                          
-                          {/* Bouton Favoris sur l'image - visible au survol */}
-                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                            <AddToFavoritesButton 
-                              product={{
-                                _id: product._id,
-                                name: product.name,
-                                description: product.description || "",
-                                price: product.price,
-                                images: product.images,
-                                availability: product.availability,
-                                category: product.category
-                              }}
-                              size="md"
-                            />
-                          </div>
                         </>
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="text-sm text-gray-400">Aucune image</span>
                         </div>
                       )}
-                    </div>
-                  </Link>
+                    </Link>
+                    
+                    {/* Bouton Favoris sur l'image - visible au survol */}
+                    {product.images && product.images.length > 0 && (
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                        <AddToFavoritesButton 
+                          product={{
+                            _id: product._id,
+                            name: product.name,
+                            description: product.description || "",
+                            price: product.price,
+                            images: product.images,
+                            availability: product.availability,
+                            category: product.category || { _id: '', name: 'Non catégorisé' }
+                          }}
+                          size="md"
+                        />
+                      </div>
+                    )}
+                  </div>
                   
                   {/* Informations et bouton */}
                   <div className="space-y-4">
@@ -190,7 +192,7 @@ export default async function Home() {
                           price: product.price,
                           images: product.images,
                           availability: product.availability,
-                          category: product.category
+                          category: product.category || { _id: '', name: 'Non catégorisé' }
                         }}
                         size="lg"
                       />

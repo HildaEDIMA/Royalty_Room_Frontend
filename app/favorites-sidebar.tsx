@@ -138,7 +138,7 @@ export default function FavoritesSidebar() {
                           </h3>
                         </Link>
                         <p className="text-xs text-gray-500 mb-3">
-                          {product.category.name}
+                          {product.category?.name || 'Non catégorisé'}
                         </p>
                         <p className="text-lg font-light text-rose-400 mb-3">
                           {formatPrice(product.price)}
