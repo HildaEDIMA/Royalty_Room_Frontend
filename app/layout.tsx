@@ -116,7 +116,7 @@ async function Navigation() {
           
           <div className="flex items-center gap-4">
             <CartButton />
-            <MobileNav categories={categories} />
+            <MobileNav />
           </div>
         </div>
       </div>

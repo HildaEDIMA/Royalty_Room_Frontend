@@ -2,13 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Category } from '@/lib/api';
 
-interface MobileNavProps {
-  categories: Category[];
-}
-
-export default function MobileNav({ categories }: MobileNavProps) {
+export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -53,8 +48,8 @@ export default function MobileNav({ categories }: MobileNavProps) {
           </div>
 
           {/* Menu Items */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="space-y-1">
+          <div className="flex-1 p-6">
+            <div className="space-y-2">
               <Link
                 href="/"
                 onClick={() => setIsOpen(false)}
@@ -68,26 +63,8 @@ export default function MobileNav({ categories }: MobileNavProps) {
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-3 text-gray-700 hover:bg-rose-50 hover:text-rose-400 rounded-lg transition-all font-medium"
               >
-                Tous les produits
+                Nos Produits
               </Link>
-
-              {categories.length > 0 && (
-                <>
-                  <div className="px-4 pt-4 pb-2">
-                    <p className="text-xs tracking-wider uppercase text-gray-500">Catégories</p>
-                  </div>
-                  {categories.map((category) => (
-                    <Link
-                      key={category._id}
-                      href={`/categories/${category._id}`}
-                      onClick={() => setIsOpen(false)}
-                      className="block px-4 py-3 text-gray-600 hover:bg-rose-50 hover:text-rose-400 rounded-lg transition-all"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </>
-              )}
             </div>
           </div>
 
