@@ -5,8 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCategories } from "@/lib/api";
 import { CartProvider } from "./cart-context";
+import { FavoritesProvider } from "./favorites-context";
 import CartSidebar from "./cart-sidebar";
 import CartButton from "./cart-button";
+import FavoritesSidebar from "./favorites-sidebar";
+import FavoritesButton from "./favorites-button";
 import MobileNav from "./mobile-nav";
 
 const geistSans = Geist({
@@ -90,6 +93,7 @@ async function Navigation() {
               </div>
             </div>
             
+            <FavoritesButton />
             <CartButton />
             
             <Link 
@@ -115,6 +119,7 @@ async function Navigation() {
           </Link>
           
           <div className="flex items-center gap-4">
+            <FavoritesButton />
             <CartButton />
             <MobileNav />
           </div>
@@ -135,9 +140,12 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-          <Navigation />
-          <CartSidebar />
-          {children}
+          <FavoritesProvider>
+            <Navigation />
+            <CartSidebar />
+            <FavoritesSidebar />
+            {children}
+          </FavoritesProvider>
         </CartProvider>
       </body>
     </html>

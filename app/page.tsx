@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCategories, getProducts, formatPrice } from "@/lib/api";
 import AddToCartButton from "./add-to-cart-button";
+import AddToFavoritesButton from "./add-to-favorites-button";
 
 // Mapping des icônes SVG pour chaque catégorie
 const getCategoryIcon = (categoryName: string) => {
@@ -127,6 +128,22 @@ export default async function Home() {
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                          
+                          {/* Bouton Favoris sur l'image - visible au survol */}
+                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                            <AddToFavoritesButton 
+                              product={{
+                                _id: product._id,
+                                name: product.name,
+                                description: product.description || "",
+                                price: product.price,
+                                images: product.images,
+                                availability: product.availability,
+                                category: product.category
+                              }}
+                              size="md"
+                            />
+                          </div>
                         </>
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -152,16 +169,32 @@ export default async function Home() {
                       <p className="text-lg text-rose-400 font-light">{formatPrice(product.price)}</p>
                     </div>
                     
-                    {/* Bouton Ajouter au panier */}
-                    <AddToCartButton
-                      product={{
-                        _id: product._id,
-                        name: product.name,
-                        price: product.price,
-                        image: product.images?.[0]?.url,
-                        availableColors: product.availableColors,
-                      }}
-                    />
+                    {/* Boutons Panier et Favoris */}
+                    <div className="flex gap-3">
+                      <div className="flex-1">
+                        <AddToCartButton
+                          product={{
+                            _id: product._id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.images?.[0]?.url,
+                            availableColors: product.availableColors,
+                          }}
+                        />
+                      </div>
+                      <AddToFavoritesButton 
+                        product={{
+                          _id: product._id,
+                          name: product.name,
+                          description: product.description || "",
+                          price: product.price,
+                          images: product.images,
+                          availability: product.availability,
+                          category: product.category
+                        }}
+                        size="lg"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
