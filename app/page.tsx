@@ -147,7 +147,6 @@ export default async function Home() {
                             price: product.price,
                             images: product.images,
                             availability: product.availability,
-                            category: product.category || { _id: '', name: 'Non catégorisé' }
                           }}
                           size="md"
                         />
@@ -192,7 +191,6 @@ export default async function Home() {
                           price: product.price,
                           images: product.images,
                           availability: product.availability,
-                          category: product.category || { _id: '', name: 'Non catégorisé' }
                         }}
                         size="lg"
                       />
