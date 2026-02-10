@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProducts, getCategories, formatPrice, Category } from "@/lib/api";
 import AddToCartButton from "../add-to-cart-button";
+import AddToFavoritesButton from "../add-to-favorites-button";
 
 export default async function ProduitsPage() {
   const [products, categories] = await Promise.all([
@@ -60,12 +61,17 @@ export default async function ProduitsPage() {
                 const categoryName = typeof product.category === 'object' 
                   ? (product.category as Category).name 
                   : '';
+                
+                // Normaliser la catégorie pour le bouton favoris
+                const category = typeof product.category === 'string' 
+                  ? undefined 
+                  : product.category;
 
                 return (
                   <div key={product._id} className="group">
                     {/* Image cliquable vers la page détail */}
-                    <Link href={`/produits/${product._id}`}>
-                      <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-6 relative cursor-pointer">
+                    <div className="aspect-square bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-6 relative">
+                      <Link href={`/produits/${product._id}`} className="absolute inset-0 cursor-pointer">
                         {product.images && product.images.length > 0 ? (
                           <>
                             <Image
@@ -81,18 +87,36 @@ export default async function ProduitsPage() {
                             <span className="text-sm text-gray-400">Aucune image</span>
                           </div>
                         )}
-                        
-                        {categoryName && (
-                          <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
-                            <span className="px-2 sm:px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
-                              {categoryName}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </Link>
+                      </Link>
+                      
+                      {categoryName && (
+                        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10">
+                          <span className="px-2 sm:px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs text-gray-700">
+                            {categoryName}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Bouton Favoris sur l'image - visible au survol */}
+                      {product.images && product.images.length > 0 && (
+                        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                          <AddToFavoritesButton 
+                            product={{
+                              _id: product._id,
+                              name: product.name,
+                              description: product.description || "",
+                              price: product.price,
+                              images: product.images,
+                              availability: product.availability,
+                              category: category
+                            }}
+                            size="md"
+                          />
+                        </div>
+                      )}
+                    </div>
                     
-                    {/* Informations et bouton */}
+                    {/* Informations et boutons */}
                     <div className="space-y-3 sm:space-y-4">
                       <div>
                         <Link href={`/produits/${product._id}`}>
@@ -129,16 +153,32 @@ export default async function ProduitsPage() {
                         </div>
                       )}
 
-                      {/* Bouton ajouter au panier */}
-                      <AddToCartButton
-                        product={{
-                          _id: product._id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.images?.[0]?.url,
-                          availableColors: product.availableColors,
-                        }}
-                      />
+                      {/* Boutons Panier et Favoris */}
+                      <div className="flex gap-3">
+                        <div className="flex-1">
+                          <AddToCartButton
+                            product={{
+                              _id: product._id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.images?.[0]?.url,
+                              availableColors: product.availableColors,
+                            }}
+                          />
+                        </div>
+                        <AddToFavoritesButton 
+                          product={{
+                            _id: product._id,
+                            name: product.name,
+                            description: product.description || "",
+                            price: product.price,
+                            images: product.images,
+                            availability: product.availability,
+                            category: category
+                          }}
+                          size="lg"
+                        />
+                      </div>
                     </div>
                   </div>
                 );

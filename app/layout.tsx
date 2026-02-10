@@ -96,12 +96,13 @@ async function Navigation() {
             <FavoritesButton />
             <CartButton />
             
-            <Link 
-              href="#contact" 
-              className="text-sm tracking-wider uppercase px-6 xl:px-8 py-2.5 xl:py-3 text-white bg-rose-300 hover:bg-rose-400 transition-all duration-300 rounded-full shadow-sm hover:shadow-md"
-            >
-              Contact
-            </Link>
+<Link
+  href="https://wa.me/221778719982"
+  className="text-sm tracking-wider uppercase px-6 xl:px-8 py-2.5 xl:py-3 text-white bg-rose-300 hover:bg-rose-400 transition-all duration-300 rounded-full shadow-sm hover:shadow-md"
+>
+  Contact
+</Link>
+
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCategory, getProductsByCategory, getCategories, formatPrice } from "@/lib/api";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/app/add-to-cart-button";
+import AddToFavoritesButton from "@/app/add-to-favorites-button";
 
 export default async function CategoryPage({ 
   params 
@@ -96,79 +97,120 @@ export default async function CategoryPage({
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {availableProducts.map((product) => (
-                  <div key={product._id} className="group">
-                    {/* Image cliquable */}
-                    <Link href={`/produits/${product._id}`}>
-                      <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative cursor-pointer">
-                        {product.images && product.images.length > 0 ? (
-                          <>
-                            <Image
-                              src={product.images[0].url}
-                              alt={product.name}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                {availableProducts.map((product) => {
+                  // Normaliser la catégorie pour le bouton favoris
+                  const productCategory = typeof product.category === 'string' 
+                    ? undefined 
+                    : product.category;
+
+                  return (
+                    <div key={product._id} className="group">
+                      {/* Image cliquable */}
+                      <div className="aspect-[3/4] bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl overflow-hidden mb-4 relative">
+                        <Link href={`/produits/${product._id}`} className="absolute inset-0 cursor-pointer">
+                          {product.images && product.images.length > 0 ? (
+                            <>
+                              <Image
+                                src={product.images[0].url}
+                                alt={product.name}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
+                            </>
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-sm text-gray-400">Aucune image</span>
+                            </div>
+                          )}
+                        </Link>
+
+                        {/* Bouton Favoris sur l'image - visible au survol */}
+                        {product.images && product.images.length > 0 && (
+                          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                            <AddToFavoritesButton 
+                              product={{
+                                _id: product._id,
+                                name: product.name,
+                                description: product.description || "",
+                                price: product.price,
+                                images: product.images,
+                                availability: product.availability,
+                                category: productCategory
+                              }}
+                              size="md"
                             />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500"></div>
-                          </>
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-sm text-gray-400">Aucune image</span>
                           </div>
                         )}
                       </div>
-                    </Link>
-                    
-                    {/* Informations et bouton */}
-                    <div className="space-y-4">
-                      <div>
-                        <Link href={`/produits/${product._id}`}>
-                          <h3 className="text-lg font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
-                            {product.name}
-                          </h3>
-                        </Link>
-                        {product.description && (
-                          <p className="text-sm text-gray-600 line-clamp-2 mb-2">
-                            {product.description}
-                          </p>
-                        )}
-                        <p className="text-lg text-rose-400 font-light">
-                          {formatPrice(product.price)}
-                        </p>
-                      </div>
                       
-                      {/* Couleurs disponibles */}
-                      {product.availableColors && product.availableColors.length > 0 && (
-                        <div className="flex gap-2">
-                          {product.availableColors.slice(0, 5).map((color, idx) => (
-                            <div
-                              key={idx}
-                              className="w-6 h-6 rounded-full border-2 border-gray-200"
-                              style={{ backgroundColor: color.hex }}
-                              title={color.name}
-                            />
-                          ))}
-                          {product.availableColors.length > 5 && (
-                            <div className="w-6 h-6 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
-                              <span className="text-xs text-gray-600">+{product.availableColors.length - 5}</span>
-                            </div>
+                      {/* Informations et boutons */}
+                      <div className="space-y-4">
+                        <div>
+                          <Link href={`/produits/${product._id}`}>
+                            <h3 className="text-lg font-light text-gray-900 group-hover:text-rose-400 transition-colors cursor-pointer mb-2">
+                              {product.name}
+                            </h3>
+                          </Link>
+                          {product.description && (
+                            <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                              {product.description}
+                            </p>
                           )}
+                          <p className="text-lg text-rose-400 font-light">
+                            {formatPrice(product.price)}
+                          </p>
                         </div>
-                      )}
-                      
-                      {/* Bouton Ajouter au panier */}
-                      <AddToCartButton
-                        product={{
-                          _id: product._id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.images?.[0]?.url,
-                          availableColors: product.availableColors,
-                        }}
-                      />
+                        
+                        {/* Couleurs disponibles */}
+                        {product.availableColors && product.availableColors.length > 0 && (
+                          <div className="flex gap-2">
+                            {product.availableColors.slice(0, 5).map((color, idx) => (
+                              <div
+                                key={idx}
+                                className="w-6 h-6 rounded-full border-2 border-gray-200"
+                                style={{ backgroundColor: color.hex }}
+                                title={color.name}
+                              />
+                            ))}
+                            {product.availableColors.length > 5 && (
+                              <div className="w-6 h-6 rounded-full border-2 border-gray-200 bg-gray-100 flex items-center justify-center">
+                                <span className="text-xs text-gray-600">+{product.availableColors.length - 5}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* Boutons Panier et Favoris */}
+                        <div className="flex gap-3">
+                          <div className="flex-1">
+                            <AddToCartButton
+                              product={{
+                                _id: product._id,
+                                name: product.name,
+                                price: product.price,
+                                image: product.images?.[0]?.url,
+                                availableColors: product.availableColors,
+                              }}
+                            />
+                          </div>
+                          <AddToFavoritesButton 
+                            product={{
+                              _id: product._id,
+                              name: product.name,
+                              description: product.description || "",
+                              price: product.price,
+                              images: product.images,
+                              availability: product.availability,
+                              category: productCategory
+                            }}
+                            size="lg"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </>
           ) : (
