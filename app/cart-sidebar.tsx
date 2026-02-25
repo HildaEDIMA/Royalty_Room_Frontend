@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from './cart-context';
+import Link from "next/link";
 import Image from 'next/image';
 import { formatPrice } from '@/lib/api';
 
@@ -153,12 +154,23 @@ export default function CartSidebar() {
                 Commander
               </button>
 
-              <button
+{/*               <button
                 onClick={clearCart}
                 className="w-full py-3 text-sm text-gray-600 hover:text-rose-400 transition-colors"
               >
                 Vider le panier
-              </button>
+              </button> */}
+                        {/* Footer */}
+          
+            <div className="border-t border-rose-100 p-6 bg-gradient-to-br from-rose-50/30 to-pink-50/30">
+              <Link
+                href="/produits"
+                onClick={toggleCart}
+                className="block w-full text-center px-6 py-3.5 text-sm tracking-wider uppercase text-rose-400 bg-white hover:bg-rose-50 border border-rose-200 transition-all duration-300 rounded-full"
+              >
+                Continuer mes achats
+              </Link>
+            </div>
             </div>
           )}
         </div>

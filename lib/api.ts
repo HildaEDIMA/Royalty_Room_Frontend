@@ -1,4 +1,4 @@
-const API_URL = 'https://backend-production-7365.up.railway.app/api';
+const API_URL = 'https://backend-5faw.onrender.com/api';
 
 export interface Category {
   _id: string;
@@ -30,17 +30,61 @@ export interface Product {
   updatedAt: string;
 }
 
+// Utility: fetch with timeout + retries (handles Render cold starts)
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit = {},
+  retries = 3,
+  timeoutMs = 15000
+): Promise<Response> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+
+      if (response.ok) return response;
+
+      // Don't retry client errors (4xx)
+      if (response.status >= 400 && response.status < 500) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      // Retry on server errors (5xx)
+      if (attempt === retries) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText} after ${retries} attempts`);
+      }
+
+      console.warn(`Attempt ${attempt} failed with status ${response.status}, retrying...`);
+    } catch (error: unknown) {
+      clearTimeout(timer);
+
+      const isAbort = error instanceof Error && error.name === 'AbortError';
+      if (isAbort) {
+        console.warn(`Attempt ${attempt} timed out after ${timeoutMs}ms`);
+      }
+
+      if (attempt === retries) throw error;
+
+      // Exponential backoff: 1s, 2s, 4s...
+      await new Promise((res) => setTimeout(res, 1000 * 2 ** (attempt - 1)));
+    }
+  }
+
+  throw new Error('fetchWithRetry: unreachable');
+}
+
 // Fonctions pour les catégories
 export async function getCategories(): Promise<Category[]> {
   try {
-    const response = await fetch(`${API_URL}/categories`, {
+    const response = await fetchWithRetry(`${API_URL}/categories`, {
       cache: 'no-store',
     });
-    
-    if (!response.ok) {
-      throw new Error('Erreur lors de la récupération des catégories');
-    }
-    
     return await response.json();
   } catch (error) {
     console.error('Erreur API getCategories:', error);
@@ -50,14 +94,9 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getCategory(id: string): Promise<Category | null> {
   try {
-    const response = await fetch(`${API_URL}/categories/${id}`, {
+    const response = await fetchWithRetry(`${API_URL}/categories/${id}`, {
       cache: 'no-store',
     });
-    
-    if (!response.ok) {
-      throw new Error('Erreur lors de la récupération de la catégorie');
-    }
-    
     return await response.json();
   } catch (error) {
     console.error('Erreur API getCategory:', error);
@@ -68,14 +107,9 @@ export async function getCategory(id: string): Promise<Category | null> {
 // Fonctions pour les produits
 export async function getProducts(): Promise<Product[]> {
   try {
-    const response = await fetch(`${API_URL}/products`, {
+    const response = await fetchWithRetry(`${API_URL}/products`, {
       cache: 'no-store',
     });
-    
-    if (!response.ok) {
-      throw new Error('Erreur lors de la récupération des produits');
-    }
-    
     return await response.json();
   } catch (error) {
     console.error('Erreur API getProducts:', error);
@@ -85,14 +119,9 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getProduct(id: string): Promise<Product | null> {
   try {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetchWithRetry(`${API_URL}/products/${id}`, {
       cache: 'no-store',
     });
-    
-    if (!response.ok) {
-      throw new Error('Erreur lors de la récupération du produit');
-    }
-    
     return await response.json();
   } catch (error) {
     console.error('Erreur API getProduct:', error);
@@ -103,10 +132,11 @@ export async function getProduct(id: string): Promise<Product | null> {
 export async function getProductsByCategory(categoryId: string): Promise<Product[]> {
   try {
     const products = await getProducts();
-    return products.filter(product => {
-      const catId = typeof product.category === 'string' 
-        ? product.category 
-        : product.category._id;
+    return products.filter((product) => {
+      const catId =
+        typeof product.category === 'string'
+          ? product.category
+          : product.category._id;
       return catId === categoryId;
     });
   } catch (error) {
