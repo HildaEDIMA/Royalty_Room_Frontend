@@ -71,9 +71,30 @@ export default function SuccessPage() {
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (isMobile) {
-        // Sur mobile : ouvre le PDF dans un nouvel onglet → visualiseur natif iOS/Android
-        const blobUrl = pdf.output("bloburl");
-        window.open(blobUrl as unknown as string, "_blank");
+        // Sur mobile : encode en base64 data URI — reste stable dans le nouvel onglet
+        // (les blob URL sont révoquées dès que le contexte parent change sur iOS/Android)
+        const base64 = pdf.output("datauristring");
+        const newTab = window.open("", "_blank");
+        if (newTab) {
+          newTab.document.write(
+            `<!DOCTYPE html>
+            <html>
+              <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Facture ${order.orderNumber}</title>
+                <style>
+                  * { margin: 0; padding: 0; box-sizing: border-box; }
+                  body { background: #1a1a1a; display: flex; flex-direction: column; min-height: 100vh; }
+                  iframe { flex: 1; width: 100%; height: 100vh; border: none; }
+                </style>
+              </head>
+              <body>
+                <iframe src="${base64}"></iframe>
+              </body>
+            </html>`
+          );
+          newTab.document.close();
+        }
       } else {
         // Sur desktop : téléchargement direct
         pdf.save(`Facture-${order.orderNumber}.pdf`);
