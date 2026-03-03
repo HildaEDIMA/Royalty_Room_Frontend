@@ -69,7 +69,15 @@ export default function SuccessPage() {
         }
       }
 
-      pdf.save(`Facture-${order.orderNumber}.pdf`);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        // Sur mobile : ouvre le PDF dans un nouvel onglet → visualiseur natif iOS/Android
+        const blobUrl = pdf.output("bloburl");
+        window.open(blobUrl as unknown as string, "_blank");
+      } else {
+        // Sur desktop : téléchargement direct
+        pdf.save(`Facture-${order.orderNumber}.pdf`);
+      }
     } catch (err) {
       console.error("Erreur PDF:", err);
     }
