@@ -38,6 +38,20 @@ export default function SuccessPage() {
   const handleDownloadPDF = async () => {
     if (!invoiceRef.current || !order) return;
     setDownloading(true);
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    // IMPORTANT : ouvrir la fenêtre AVANT tout await
+    // iOS bloque window.open() si appelé après une opération asynchrone
+    let newTab: Window | null = null;
+    if (isMobile) {
+      newTab = window.open("", "_blank");
+      if (newTab) {
+        newTab.document.write(`<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chargement...</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f9f9f9;font-family:sans-serif;color:#999;font-size:14px;}</style></head><body><p>Génération de la facture...</p></body></html>`);
+        newTab.document.close();
+      }
+    }
+
     try {
       const html2canvas = (await import("html2canvas")).default;
       const jsPDF = (await import("jspdf")).default;
@@ -69,34 +83,30 @@ export default function SuccessPage() {
         }
       }
 
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        // Sur mobile : encode en base64 data URI — reste stable dans le nouvel onglet
-        // (les blob URL sont révoquées dès que le contexte parent change sur iOS/Android)
+      if (isMobile && newTab) {
+        // Injecter le PDF en base64 dans l'onglet déjà ouvert
         const base64 = pdf.output("datauristring");
-        const newTab = window.open("", "_blank");
-        if (newTab) {
-          newTab.document.write(
-            `<!DOCTYPE html>
-            <html>
-              <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>Facture ${order.orderNumber}</title>
-                <style>
-                  * { margin: 0; padding: 0; box-sizing: border-box; }
-                  body { background: #1a1a1a; display: flex; flex-direction: column; min-height: 100vh; }
-                  iframe { flex: 1; width: 100%; height: 100vh; border: none; }
-                </style>
-              </head>
-              <body>
-                <iframe src="${base64}"></iframe>
-              </body>
-            </html>`
-          );
-          newTab.document.close();
-        }
-      } else {
-        // Sur desktop : téléchargement direct
+        newTab.document.open();
+        newTab.document.write(
+          `<!DOCTYPE html>
+          <html>
+            <head>
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>Facture ${order.orderNumber}</title>
+              <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                html, body { height: 100%; background: #111; }
+                iframe { width: 100%; height: 100%; border: none; display: block; }
+              </style>
+            </head>
+            <body>
+              <iframe src="${base64}"></iframe>
+            </body>
+          </html>`
+        );
+        newTab.document.close();
+      } else if (!isMobile) {
+        // Desktop : téléchargement direct
         pdf.save(`Facture-${order.orderNumber}.pdf`);
       }
     } catch (err) {
