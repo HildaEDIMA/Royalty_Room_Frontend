@@ -117,9 +117,13 @@ export default async function Home() {
                       {/* Boutons Panier et Favoris */}
                       <div className="flex gap-3">
                         <div className="flex-1">
-                          <AddToCartButton 
-                            product={product}
-                          />
+<AddToCartButton product={{
+  _id: product._id,
+  name: product.name,
+  price: product.price,
+  image: product.images?.[0]?.url,
+  availableColors: product.availableColors,
+}} />
                         </div>
                         <AddToFavoritesButton 
                           product={{

@@ -11,7 +11,11 @@ export default function FavoritesSidebar() {
   const { addToCart } = useCart();
 
   const handleAddToCart = (product: any) => {
-    addToCart(product);
+    const productWithImage = {
+      ...product,
+      image: product.image || (product.images && product.images.length > 0 ? product.images[0].url : undefined),
+    };
+    addToCart(productWithImage);
   };
 
   return (
