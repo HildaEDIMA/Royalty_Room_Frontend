@@ -3,10 +3,17 @@
 import { useCart } from './cart-context';
 import Link from "next/link";
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/lib/api';
 
 export default function CartSidebar() {
-  const { items, isOpen, toggleCart, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart();
+  const { items, isOpen, toggleCart, removeFromCart, updateQuantity, getTotalPrice } = useCart();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    toggleCart();
+    router.push('/commande');
+  };
 
   return (
     <>
@@ -145,32 +152,21 @@ export default function CartSidebar() {
               </div>
 
               <button
-                onClick={() => {
-                  // Ici vous pouvez ajouter la logique de commande
-                  alert('Fonctionnalité de commande à implémenter');
-                }}
+                onClick={handleCheckout}
                 className="w-full py-4 bg-gradient-to-r from-rose-400 to-pink-400 text-white rounded-full hover:from-rose-500 hover:to-pink-500 transition-all shadow-lg hover:shadow-xl"
               >
                 Commander
               </button>
 
-{/*               <button
-                onClick={clearCart}
-                className="w-full py-3 text-sm text-gray-600 hover:text-rose-400 transition-colors"
-              >
-                Vider le panier
-              </button> */}
-                        {/* Footer */}
-          
-            <div className="border-t border-rose-100 p-6 bg-gradient-to-br from-rose-50/30 to-pink-50/30">
-              <Link
-                href="/produits"
-                onClick={toggleCart}
-                className="block w-full text-center px-6 py-3.5 text-sm tracking-wider uppercase text-rose-400 bg-white hover:bg-rose-50 border border-rose-200 transition-all duration-300 rounded-full"
-              >
-                Continuer mes achats
-              </Link>
-            </div>
+              <div className="border-t border-rose-100 pt-4">
+                <Link
+                  href="/produits"
+                  onClick={toggleCart}
+                  className="block w-full text-center px-6 py-3.5 text-sm tracking-wider uppercase text-rose-400 bg-white hover:bg-rose-50 border border-rose-200 transition-all duration-300 rounded-full"
+                >
+                  Continuer mes achats
+                </Link>
+              </div>
             </div>
           )}
         </div>
