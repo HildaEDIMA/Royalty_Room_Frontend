@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/api";
 
@@ -27,13 +27,54 @@ interface OrderData {
 
 export default function SuccessPage() {
   const [order, setOrder] = useState<OrderData | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const raw = sessionStorage.getItem("royalty_order");
     if (raw) setOrder(JSON.parse(raw));
   }, []);
 
-  const handlePrint = () => window.print();
+  const handleDownloadPDF = async () => {
+    if (!invoiceRef.current || !order) return;
+    setDownloading(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        removeContainer: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      if (pdfHeight <= pageHeight) {
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      } else {
+        let yOffset = 0;
+        let remaining = pdfHeight;
+        while (remaining > 0) {
+          pdf.addImage(imgData, "PNG", 0, -yOffset, pdfWidth, pdfHeight);
+          remaining -= pageHeight;
+          yOffset += pageHeight;
+          if (remaining > 0) pdf.addPage();
+        }
+      }
+
+      pdf.save(`Facture-${order.orderNumber}.pdf`);
+    } catch (err) {
+      console.error("Erreur PDF:", err);
+    }
+    setDownloading(false);
+  };
 
   // ── Page vide ──────────────────────────────────────────────────
   if (!order) {
@@ -61,27 +102,8 @@ export default function SuccessPage() {
 
   return (
     <>
-      {/* ── Styles impression ──────────────────────────────────── */}
-      <style>{`
-        @media print {
-          @page { size: A4; margin: 0; }
-          body * { visibility: hidden !important; }
-          #invoice, #invoice * { visibility: visible !important; }
-          #invoice {
-            position: fixed !important;
-            inset: 0 !important;
-            width: 210mm !important;
-            min-height: 297mm !important;
-            margin: 0 !important;
-            padding: 14mm 16mm !important;
-            background: #ffffff !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-          }
-          .no-print { display: none !important; }
-        }
-      `}</style>
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+
 
       {/* ── Page ── */}
       <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #fff1f2, #ffffff, #fdf2f8)", paddingTop: "6rem", paddingBottom: "4rem" }}>
@@ -111,13 +133,26 @@ export default function SuccessPage() {
             </Link>
 
             <button
-              onClick={handlePrint}
-              style={{ display: "flex", alignItems: "center", gap: "0.625rem", padding: "0.75rem 1.5rem", fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "#ffffff", background: "linear-gradient(to right, #fb7185, #f472b6)", border: "none", borderRadius: 999, cursor: "pointer", boxShadow: "0 4px 12px rgba(251,113,133,0.3)" }}
+              onClick={handleDownloadPDF}
+              disabled={downloading}
+              style={{ display: "flex", alignItems: "center", gap: "0.625rem", padding: "0.75rem 1.5rem", fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "#ffffff", background: "linear-gradient(to right, #fb7185, #f472b6)", border: "none", borderRadius: 999, cursor: downloading ? "not-allowed" : "pointer", opacity: downloading ? 0.6 : 1, boxShadow: "0 4px 12px rgba(251,113,133,0.3)" }}
             >
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Télécharger PDF
+              {downloading ? (
+                <>
+                  <svg width="16" height="16" style={{ animation: "spin 1s linear infinite" }} viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" style={{ opacity: 0.25 }} />
+                    <path fill="currentColor" style={{ opacity: 0.75 }} d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z" />
+                  </svg>
+                  Génération...
+                </>
+              ) : (
+                <>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Télécharger PDF
+                </>
+              )}
             </button>
           </div>
 
@@ -127,6 +162,7 @@ export default function SuccessPage() {
           ══════════════════════════════════════════ */}
           <div
             id="invoice"
+            ref={invoiceRef}
             style={{
               background: "#ffffff",
               borderRadius: 16,
