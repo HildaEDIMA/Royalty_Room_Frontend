@@ -276,8 +276,8 @@ export default async function Home() {
           <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 sm:mb-10 md:mb-12 leading-relaxed max-w-2xl mx-auto px-4">
             Vous voulez du sur mesure? Parlons de vos aspirations et donnons vie à vos rêves.
           </p>
-          <a
-            href="https://wa.me/221778719982"
+<a
+  href="https://wa.me/221778719982?text=Bonjour%20Royalty%20Room%2C%20je%20souhaite%20discuter%20sur%20mon%20projet%20de%20meuble%20sur%20mesure."
   className="inline-flex items-center px-8 sm:px-10 md:px-12 py-3.5 sm:py-4 md:py-5 text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.2em] uppercase text-white bg-gradient-to-r from-rose-400 to-pink-400 hover:from-rose-500 hover:to-pink-500 transition-all duration-300 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 group"
 >
   <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 shrink-0" viewBox="0 0 24 24" fill="currentColor">
