@@ -18,19 +18,17 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* Hero Section avec Vidéo */}
+      {/* Hero Section avec Image */}
       <section className="relative h-[60vh] sm:h-[70vh] flex items-center justify-center overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="https://res.cloudinary.com/dyboo0v03/video/upload/v1768780156/video_idvxff.mp4" type="video/mp4" />
-        </video>
+        <Image
+          src="https://res.cloudinary.com/dyboo0v03/image/upload/v1774053240/WhatsApp_Image_2026-03-21_at_01.29.16_vfqbkv.jpg"
+          alt="Royalty Room – intérieur d'exception"
+          fill
+          priority
+          className="object-cover"
+        />
         
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-200/40 via-pink-200/30 to-rose-300/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-900/50 via-black/30 to-rose-900/40" />
         
         <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl">
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-extralight text-white mb-4 sm:mb-6 tracking-tight leading-tight drop-shadow-lg">
@@ -159,37 +157,110 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Section Galerie */}
-      <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 bg-gradient-to-br from-rose-50/50 to-pink-50/50">
+      {/* Section Galerie – mosaïque éditoriale */}
+      <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16 md:mb-20">
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extralight text-gray-900 mb-4 sm:mb-6 tracking-tight leading-tight">
-              Laissez-vous inspirer
-            </h2>
+          {/* En-tête éditorial */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 sm:mb-14 md:mb-20 gap-4">
+            <div>
+              <span className="text-xs tracking-[0.3em] uppercase text-rose-400 mb-2 block">Univers Royalty Room</span>
+              <h2 className="text-3xl sm:text-5xl md:text-6xl font-extralight text-gray-900 tracking-tight leading-tight">
+                Laissez-vous<br />
+                <span className="italic font-light text-rose-400">inspirer</span>
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 max-w-xs leading-relaxed sm:text-right">
+              Chaque espace est une signature. Découvrez nos univers de référence, entre mobilier sur mesure et matières d'exception.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+          {/* Ligne 1 : grande image vedette + 2 images empilées */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5">
+            {/* Grande image vedette */}
+            <div className="md:col-span-2 h-[360px] sm:h-[480px] md:h-[560px] rounded-2xl overflow-hidden relative group">
+              <Image
+                src="https://res.cloudinary.com/dyboo0v03/image/upload/v1781139998/t%C3%A9l%C3%A9charger_2_x3c2a3.jpg"
+                alt="Inspiration chambre – lit bouclé"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              <span className="absolute bottom-5 left-6 text-white text-xs tracking-[0.25em] uppercase opacity-80">Literie & Confort</span>
+            </div>
+            {/* 2 images empilées */}
+            <div className="grid grid-rows-2 gap-4 sm:gap-5">
+              <div className="h-[170px] sm:h-[228px] md:h-[270px] rounded-2xl overflow-hidden relative group">
+                <Image
+                  src="https://res.cloudinary.com/dyboo0v03/image/upload/v1781139998/t%C3%A9l%C3%A9charger_3_jsg5dh.jpg"
+                  alt="Inspiration table de nuit"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+              </div>
+              <div className="h-[170px] sm:h-[228px] md:h-[270px] rounded-2xl overflow-hidden relative group">
+                <Image
+                  src="https://res.cloudinary.com/dyboo0v03/image/upload/v1781140058/t%C3%A9l%C3%A9charger_9_vlwabc.jpg"
+                  alt="Inspiration dressing"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+              </div>
+            </div>
+          </div>
+
+          {/* Ligne 2 : 4 images horizontales de hauteur égale */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 mb-4 sm:mb-5">
             {[
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo1_locpof.jpg",
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo2_rzdvgm.jpg",
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo3_ygttw8.jpg",
-              "https://res.cloudinary.com/dyboo0v03/image/upload/v1769648334/Inspo4_bkfint.jpg",
-            ].map((src, i) => (
-              <div
-                key={i}
-                className={`h-[240px] sm:h-[320px] md:h-[420px] rounded-2xl sm:rounded-3xl overflow-hidden relative ${
-                  i % 2 === 1 ? "md:translate-y-12" : ""
-                }`}
-              >
+              { src: "https://res.cloudinary.com/dyboo0v03/image/upload/v1781139998/t%C3%A9l%C3%A9charger_4_fxwvb9.jpg", label: "Armoire" },
+              { src: "https://res.cloudinary.com/dyboo0v03/image/upload/v1781139998/t%C3%A9l%C3%A9charger_5_doc1zl.jpg", label: "Dressing" },
+              { src: "https://res.cloudinary.com/dyboo0v03/image/upload/v1781139998/t%C3%A9l%C3%A9charger_6_peeejd.jpg", label: "Coiffeuse" },
+              { src: "https://res.cloudinary.com/dyboo0v03/image/upload/v1781140058/Jig_Maker_s_Tool_Kit_yctrrn.jpg", label: "Matériaux" },
+            ].map(({ src, label }, i) => (
+              <div key={i} className="h-[200px] sm:h-[260px] md:h-[300px] rounded-2xl overflow-hidden relative group">
                 <Image
                   src={src}
-                  alt={`Inspiration ${i + 1}`}
+                  alt={`Inspiration – ${label}`}
                   fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="absolute bottom-4 left-4 text-white text-xs tracking-[0.2em] uppercase opacity-0 group-hover:opacity-90 transition-opacity duration-500">{label}</span>
               </div>
             ))}
+          </div>
+
+          {/* Ligne 3 : petite + grande + petite */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 sm:gap-5">
+            <div className="md:col-span-1 h-[240px] md:h-[340px] rounded-2xl overflow-hidden relative group">
+              <Image
+                src="https://res.cloudinary.com/dyboo0v03/image/upload/v1781140059/t%C3%A9l%C3%A9charger_10_wsmzsw.jpg"
+                alt="Inspiration coussins bouclé"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+            </div>
+            <div className="md:col-span-3 h-[240px] md:h-[340px] rounded-2xl overflow-hidden relative group">
+              <Image
+                src="https://res.cloudinary.com/dyboo0v03/image/upload/v1781140061/Gemini_Generated_Image_njcykmnjcykmnjcy_lsxyix.png"
+                alt="Visualisation chambre Royalty Room"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              <span className="absolute bottom-5 left-6 text-white text-xs tracking-[0.25em] uppercase opacity-80">Vision Royalty Room</span>
+            </div>
+            <div className="md:col-span-1 h-[240px] md:h-[340px] rounded-2xl overflow-hidden relative group">
+              <Image
+                src="https://res.cloudinary.com/dyboo0v03/image/upload/v1774053240/WhatsApp_Image_2026-03-21_at_01.29.16_vfqbkv.jpg"
+                alt="Réalisation Royalty Room"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+            </div>
           </div>
         </div>
       </section>
